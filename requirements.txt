@@ -1,0 +1,6 @@
+black
+isort
+pre-commit>=2.16.0
+pygments>=2.11.2
+fastapi~=0.109.2
+pydantic~=2.6.1
