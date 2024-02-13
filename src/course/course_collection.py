@@ -1,13 +1,6 @@
-import re
 from typing import List
 
-from bson import ObjectId
-
-from repository.mongodb import MongoDB as db
-
-from typing import List
-
-from src.model.status import Status
+from src.status.status import Status
 
 
 class CourseCollection:

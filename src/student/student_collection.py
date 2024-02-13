@@ -1,9 +1,6 @@
-
-from bson import ObjectId
-
 from typing import List
 
-from src.model.status import Status
+from src.status.status import Status
 
 
 class StudentCollection:

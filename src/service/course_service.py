@@ -1,13 +1,11 @@
 import re
-from typing import List
 
 from bson import ObjectId
 
 from fastapi import APIRouter
 
 from repository.mongodb import MongoDB as db
-from src.model.status import Status
-from src.model.course_collection import CourseCollection
+from src.course.course_collection import CourseCollection
 
 from fastapi import HTTPException
 

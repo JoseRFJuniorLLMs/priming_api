@@ -1,5 +1,5 @@
 from bson import ObjectId
-class ProfessorCollection:
+class TeacherCollection:
     def __init__(self):
         self.id: str
         self.nome: str
