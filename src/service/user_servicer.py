@@ -27,15 +27,15 @@ def delete_by_id(user_id: str):
 
 def get_list_users():
     list_users = db().get_by_filter(collection=COLLECTION_USER, key={})
-    return [User(**user) for user in list_users]
+    return [User(**user, _id=ObjectId(user['_id'])) for user in list_users]
 
 
 def get_user_by_id(user_id: str):
     result = db().get_by_key(collection=COLLECTION_USER, key={"_id": ObjectId(user_id)})
-    return User(**result)
+    return User(**result, _id=ObjectId(result['_id']))
 
 
 def get_user_by_name(user_name: str):
     regex = re.compile(f".*{user_name}.*", re.IGNORECASE)
     list_users = db().get_by_filter(collection=COLLECTION_USER, key={"name": regex})
-    return [User(**user) for user in list_users]
+    return [User(**user, _id=ObjectId(user['_id'])) for user in list_users]
