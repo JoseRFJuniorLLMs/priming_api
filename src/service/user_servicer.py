@@ -39,3 +39,5 @@ def get_user_by_name(user_name: str):
     regex = re.compile(f".*{user_name}.*", re.IGNORECASE)
     list_users = db().get_by_filter(collection=COLLECTION_USER, key={"name": regex})
     return [User(**user, _id=ObjectId(user['_id'])) for user in list_users]
+
+
