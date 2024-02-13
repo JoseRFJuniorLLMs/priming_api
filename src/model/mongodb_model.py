@@ -1,52 +1,41 @@
-from datetime import datetime
+import re
+from typing import List
 
 from bson import ObjectId
-from bson.errors import InvalidId
-from pydantic import BaseConfig, BaseModel
+
+from model.user_model import User
+from repository.mongodb import MongoDB as db
+
+COLLECTION_USER = "StudentCollection"
 
 
-# https://github.com/tiangolo/fastapi/issues/1515
-class OID(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        try:
-            return ObjectId(str(v))
-        except InvalidId:
-            raise ValueError("Not a valid ObjectId")
+def create_user(user_data: User):
+    return db().save_document(collection=COLLECTION_USER, document=user_data.dict())
 
 
-class MongoModel(BaseModel):
-    class Config(BaseConfig):
-        allow_population_by_field_name = True
-        json_encoders = {
-            datetime: lambda dt: dt.isoformat(),
-            ObjectId: lambda oid: str(oid),
-        }
+def update_user(user_data: User):
+    db().update_document(
+        collection=COLLECTION_USER,
+        key={"_id": user_data.id},
+        document=user_data.dict(),
+    )
 
-    @classmethod
-    def from_mongo(cls, data: dict):
-        """We must convert _id into "id"."""
-        if not data:
-            return data
-        id = data.pop("_id", None)
-        return cls(**dict(data, id=id))
 
-    def mongo(self, **kwargs):
-        exclude_unset = kwargs.pop("exclude_unset", True)
-        by_alias = kwargs.pop("by_alias", True)
+def delete_by_id(user_id: str):
+    db().delete_by_key(collection=COLLECTION_USER, key={"_id": ObjectId(user_id)})
 
-        parsed = self.dict(
-            exclude_unset=exclude_unset,
-            by_alias=by_alias,
-            **kwargs,
-        )
 
-        # Mongo uses `_id` as default key. We should stick to that as well.
-        if "_id" not in parsed and "id" in parsed:
-            parsed["_id"] = parsed.pop("id")
+def get_list_users():
+    list_users = db().get_by_filter(collection=COLLECTION_USER, key={})
+    return [User(**user) for user in list_users]
 
-        return parsed
+
+def get_user_by_id(user_id: str):
+    result = db().get_by_key(collection=COLLECTION_USER, key={"_id": ObjectId(user_id)})
+    return User(**result)
+
+
+def get_user_by_name(user_name: str):
+    regex = re.compile(f".*{user_name}.*", re.IGNORECASE)
+    list_users = db().get_by_filter(collection=COLLECTION_USER, key={"name": regex})
+    return [User(**user) for user in list_users]
