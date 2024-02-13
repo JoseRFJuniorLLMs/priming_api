@@ -7,7 +7,7 @@ from repository.mongodb import MongoDB as db
 
 from typing import List
 
-from src.model.Status import Status
+from src.model.status import Status
 
 
 class CourseCollection:
@@ -21,3 +21,6 @@ class CourseCollection:
         self.level: str
         self.price: str
         self.status: Status = Status.ACTIVE
+
+    def mongo(self):
+        pass

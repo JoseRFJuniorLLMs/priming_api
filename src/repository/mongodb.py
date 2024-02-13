@@ -1,48 +1,48 @@
+import os
 from datetime import date, datetime, time
 from enum import Enum
-from os import getenv
 from typing import Dict, List
 
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
-
 from exceptions import mongodb_expection
+from dotenv import load_dotenv
 
-
-def _transform_dict(dict_data: dict):
-    def validation(v):
-        if isinstance(v, date):
-            return datetime.combine(v, time())
-        if isinstance(v, list):
-            return [validation(i) for i in v]
-        if isinstance(v, dict):
-            return _transform_dict(v)
-        if isinstance(v, Enum):
-            return v.value
-        return v
-
-    return {k: validation(v) for k, v in dict_data.items()}
-
-
-def _get_db():
-    mongodb_url = getenv("MONGODB_URL")
-    client = MongoClient(mongodb_url)
-    return client[getenv("MONGODB_DATABASE")]
-
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
 class MongoDB:
     def __init__(self):
-        self.db = _get_db()
+        self.db = self._get_db()
+
+    def _transform_dict(self, dict_data: dict):
+        def validation(v):
+            if isinstance(v, date):
+                return datetime.combine(v, time())
+            if isinstance(v, list):
+                return [validation(i) for i in v]
+            if isinstance(v, dict):
+                return self._transform_dict(v)
+            if isinstance(v, Enum):
+                return v.value
+            return v
+
+        return {k: validation(v) for k, v in dict_data.items()}
+
+    def _get_db(self):
+        client = MongoClient("mongodb+srv://junior:debian23@prime.0zjimdw.mongodb.net/?retryWrites=true&w=majority")
+        mongodb_url = client.get_database("primeDB")
+        return client[mongodb_url]
 
     def save_document(self, collection: str, document: Dict) -> str:
         try:
-            result = self.db[collection].insert_one(_transform_dict(document))
+            result = self.db[collection].insert_one(self._transform_dict(document))
             return str(result.inserted_id)
         except DuplicateKeyError:
             raise mongodb_expection.DuplicateKeyError()
 
     def update_document(self, collection: str, key: Dict, document: Dict):
-        result = self.db[collection].replace_one(key, _transform_dict(document))
+        result = self.db[collection].replace_one(key, self._transform_dict(document))
         if result.matched_count == 0:
             raise mongodb_expection.DocumentNotFoundError(key)
 
@@ -63,3 +63,16 @@ class MongoDB:
         if result:
             return result
         raise mongodb_expection.DocumentNotFoundError(key)
+
+    def test_connection(self):
+        try:
+            # Conectar ao MongoDB
+            client = MongoClient("mongodb+srv://junior:debian23@prime.0zjimdw.mongodb.net/?retryWrites=true&w=majority")
+            client.get_database("primeDB")
+            print("Conexão bem-sucedida ao MongoDB!")
+            print(f"Versão do MongoDB: {client.server_info()['version']}")
+            return True
+        except Exception as e:
+            print(f"Erro ao conectar ao MongoDB: {e}")
+            return False
+

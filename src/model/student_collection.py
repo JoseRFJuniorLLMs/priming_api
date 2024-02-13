@@ -3,7 +3,7 @@ from bson import ObjectId
 
 from typing import List
 
-from src.model.Status import Status
+from src.model.status import Status
 
 
 class StudentCollection:

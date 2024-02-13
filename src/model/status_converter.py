@@ -1,4 +1,4 @@
-from src.model.Status import Status
+from src.model.status import Status
 
 
 def convert_to_string(status: Status) -> str:
