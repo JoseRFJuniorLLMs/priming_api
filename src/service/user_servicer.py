@@ -6,7 +6,7 @@ from bson import ObjectId
 from model.user_model import User
 from repository.mongodb import MongoDB as db
 
-COLLECTION_USER = "users"
+COLLECTION_USER = "StudentCollection"
 
 
 def create_user(user_data: User):

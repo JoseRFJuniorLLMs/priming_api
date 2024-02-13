@@ -21,4 +21,4 @@ app.include_router(crud_router)
 # Iniciando o servidor FastAPI
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)

@@ -30,9 +30,9 @@ class MongoDB:
         return {k: validation(v) for k, v in dict_data.items()}
 
     def _get_db(self):
-        client = MongoClient("mongodb+srv://junior:debian23@prime.0zjimdw.mongodb.net/?retryWrites=true&w=majority")
-        mongodb_url = client.get_database("primeDB")
-        return client[mongodb_url]
+        client = MongoClient(
+            "mongodb+srv://junior:debian23@prime.0zjimdw.mongodb.net/primeDB?retryWrites=true&w=majority")
+        return client.primeDB
 
     def save_document(self, collection: str, document: Dict) -> str:
         try:
