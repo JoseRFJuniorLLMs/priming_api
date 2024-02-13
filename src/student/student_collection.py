@@ -5,13 +5,14 @@ from src.status.status import Status
 
 class StudentCollection:
     def __init__(self):
-        self.id: str
-        self.name: str
-        self.email: str
-        self.tax_identification_number: str
-        self.personal_identification_number: str
-        self.login: str
-        self.password: str
-        self.status: Status = Status.ACTIVE
-        self.course: List[str]
-        self.prime: List[str]
+        id: str
+        name: str
+        email: str
+        tax_identification_number: str
+        personal_identification_number: str
+        login: str
+        password: str
+        status: Status = Status.ACTIVE
+        course: List[str]
+        lesson: List[str]
+        prime: List[str]
