@@ -32,12 +32,21 @@ def get_list_users():
         user_id = ObjectId(user['_id'])
         user_data = {
             '_id': user_id,
+            'name': user.get('name', ''),
             'gender': user.get('gender', ''),
+            'email': user.get('email', ''),
+            'tax_identification_number': user.get('tax_identification_number', ''),
+            'personal_identification_number': user.get('personal_identification_number', ''),
+            'login': user.get('login', ''),
+            'password': user.get('password', ''),
             'status': user.get('status', ''),
-            'lesson': user.get('lesson', '')
+            'course': user.get('course', ''),
+            'lesson': user.get('lesson', []),
+            'prime': user.get('prime', '')
         }
         users.append(User(**user_data))
     return users
+
 
 
 def get_user_by_id(user_id: str):
