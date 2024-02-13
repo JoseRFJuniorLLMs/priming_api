@@ -1,21 +1,19 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional, List
-
 from bson import ObjectId
+from pydantic import BaseModel, Field
 
-from model.mongodb_model import OID, MongoModel
-
-class Gender(Enum):
+class Gender(str, Enum):
     MALE = "Male"
     FEMALE = "Female"
 
-class Status(Enum):
+class Status(str, Enum):
     ACTIVE = "Active"
     INACTIVE = "Inactive"
 
-class User(MongoModel):
-    id: OID = str(ObjectId())
+class User(BaseModel):
+    id: Optional[ObjectId] = Field(default_factory=ObjectId, alias="_id")
     name: str
     gender: Gender
     email: str
@@ -27,3 +25,9 @@ class User(MongoModel):
     course: List[str]
     lesson: List[str]
     prime: List[str]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
