@@ -27,7 +27,17 @@ def delete_by_id(user_id: str):
 
 def get_list_users():
     list_users = db().get_by_filter(collection=COLLECTION_USER, key={})
-    return [User(**user, id=ObjectId(user['_id'])) for user in list_users]
+    users = []
+    for user in list_users:
+        user_id = ObjectId(user['_id'])
+        user_data = {
+            '_id': user_id,
+            'gender': user.get('gender', ''),
+            'status': user.get('status', ''),
+            'lesson': user.get('lesson', '')
+        }
+        users.append(User(**user_data))
+    return users
 
 
 def get_user_by_id(user_id: str):
