@@ -33,19 +33,20 @@ def get_list_users():
         user_data = {
             '_id': user_id,
             'name': user.get('name', ''),
-            'gender': user.get('gender', ''),
+            'gender': user.get('gender', 'Male'),  # Providing a default value
             'email': user.get('email', ''),
             'tax_identification_number': user.get('tax_identification_number', ''),
             'personal_identification_number': user.get('personal_identification_number', ''),
             'login': user.get('login', ''),
             'password': user.get('password', ''),
-            'status': user.get('status', ''),
+            'status': user.get('status', 'Active'),  # Providing a default value
             'course': user.get('course', ''),
             'lesson': user.get('lesson', []),
             'prime': user.get('prime', '')
         }
         users.append(User(**user_data))
     return users
+
 
 
 
